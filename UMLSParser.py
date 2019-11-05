@@ -39,17 +39,21 @@ class UMLSParser:
             logging.info("No language filtering applied.")
         self.paths = {
             'MRCONSO': path + os.sep + 'META' + os.sep + 'MRCONSO.RRF',
-            'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF'
+            'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF',
+            'MRSTY': path + os.sep + 'META' + os.sep + 'MRSTY.RRF',
+            'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF.RRF'
         }
         self.language_filter = language_filter
         self.concepts = {}
+        self.semantic_types = {}
         self.__parse_mrconso__()
         self.__parse_mrdef__()
+        self.__parse_mrsty__()
 
     def __parse_mrconso__(self):
         # https://www.ncbi.nlm.nih.gov/books/NBK9685/table/ch03.T.concept_names_and_sources_file_mr/
-        logging.info('Parsing UMLS concepts...')
-        for line in tqdm(open(self.paths['MRCONSO'])):
+        logging.info('Parsing UMLS concepts (MRCONSO.RRF) ...')
+        for line in tqdm(open(self.paths['MRCONSO']), desc='Parsing UMLS concepts (MRCONSO.RRF)'):
             line = line.split('|')
             data = {
                 'cui': line[0],  # concept identifier
@@ -67,16 +71,15 @@ class UMLSParser:
         logging.info('Found {} unique CUI´s'.format(len(self.concepts.keys())))
 
     def __parse_mrdef__(self):
-        logging.info('Parsing UMLS definitions...')
-
+        logging.info('Parsing UMLS definitions (MRDEF.RRF) ...')
         source_filter = []
         for language in self.language_filter:
             for source in UMLS_sources_by_language.get(language):
                 source_filter.append(source)
 
-        for line in tqdm(open(self.paths['MRDEF'])):
+        for line in tqdm(open(self.paths['MRDEF']), desc='Parsing UMLS definitions (MRDEF.RRF)'):
             line = line.split('|')
-            data = {
+            data = {  # TODO USE OFFICIAL FIELD NAMES FROM MRFILES.RRF
                 'cui': line[0],
                 'source': line[4],
                 'definition': line[5]
@@ -87,6 +90,35 @@ class UMLSParser:
             concept.__add_mrdef_data__(data)
             self.concepts[data.get('cui')] = concept
 
+    def __parse_mrsty__(self):
+        for line in tqdm(open(self.paths['MRSTY']), desc='Parsing UMLS semantic types (MRSTY.RRF)'):
+            line = line.split('|')
+            data = {  # TODO USE OFFICIAL FIELD NAMES FROM MRFILES.RRF
+                'cui': line[0],
+                'tui': line[1],
+                'definition': line[3]
+            }
+            concept = self.concepts.get(data['cui'], Concept(data['cui']))
+            concept.__add_mrsty_data__(data)
+            self.concepts[data.get('cui')] = concept
+
+    def __parse_srdef__(self):
+        for line in tqdm(open(self.paths['SRDEF']), desc='Parsing UMLS semantic net definitions (SRDEF.RRF)'):
+            line = line.split('|')
+            data = {
+                'RT': line[0],
+                'UI': line[1],
+                'STY_RL': line[2],
+                'STN_RTN': line[3],
+                'DEF': line[4],
+                'EX': line[5],
+                'UN': line[6],
+                'NH': line[7],
+                'ABR': line[8],
+                'RIN': line[9]
+            }
+
+
     def get_concepts(self):
         return self.concepts
 
@@ -95,13 +127,19 @@ class UMLSParser:
 
 
 class SemanticType:
-    def __init__(self, id: str):
-        self.id = id
+    def __init__(self, tui: str):
+        self.tui = tui
+
+    def __add_srdef_data__(self, data: dict):
+        # TODO WRITE ME
+        pass
+
 
 
 class Concept:
     def __init__(self, cui: str):
         self.cui = cui
+        self.tui = None
         self.preferred_names = collections.defaultdict(set)
         self.all_names = collections.defaultdict(set)
         self.descriptions = set()
@@ -119,9 +157,12 @@ class Concept:
     def __add_mrdef_data__(self, data: dict):
         self.descriptions.add((data.get('definition'), data.get('source')))
 
+    def __add_mrsty_data__(self, data: dict):
+        self.tui = data.get('ui')
+
     def get_preferred_names_for_language(self, lang: str) -> set:
         """
-
+        TODO WRITE ME
        :param lang:
        :return:
        """
@@ -129,7 +170,7 @@ class Concept:
 
     def get_definitions(self) -> set:
         """
-
+        TODO WRITE ME
         :return:
         """
         return self.descriptions
