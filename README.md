@@ -17,7 +17,7 @@ This tool requires the full UMLS release, so please download the [Full UMLS Rele
 
 #### Extracting Relevant Data out of the UMLS Full Release
 
-*TODO: MAKE SCRIPT*
+*TODO: MAKE SCRIPT AND CHANGE PATHS IN PARSER ACCORDINGLY*
 
 ```bash
 mkdir umls-extract
@@ -29,6 +29,10 @@ gunzip 2019AA/META/MRCONSO.RRF.ab.gz
 cat 2019AA/META/MRCONSO.RRF.aa 2019AA/META/MRCONSO.RRF.ab > umls-extract/MRCONSO.RRF
 gunzip 2019AA/META/MRDEF.RRF.gz
 mv 2019AA/META/MRDEF.RRF umls-extract/
+gunzip 2019AA/META/MRSTY.RRF.gz
+mv 2019AA/META/MRSTY.RRF umls-extract/
+TODO ADD SRDEF
+
 ```
 
 ## Versioning
