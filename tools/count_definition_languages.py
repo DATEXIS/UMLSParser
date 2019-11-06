@@ -8,7 +8,8 @@ from tqdm import tqdm
 from UMLSParser import UMLSParser
 from langdetect import detect
 
-umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2019AA-full/2019AA', language_filter=['SPA', 'GER'])
+umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2019AA-full/2019AA', language_filter=['GER'])
+# umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2019AA-full/2019AA')
 
 language_counter = collections.defaultdict(collections.Counter)
 

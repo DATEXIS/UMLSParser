@@ -1,8 +1,10 @@
-import collections
 import logging
 import os
 
 from tqdm import tqdm
+
+from model.Concept import Concept
+from model.SemanticType import SemanticType
 
 UMLS_sources_by_language = {
     'ENG': ['MSH', 'CSP', 'NCI', 'PDQ', 'NCI_NCI-GLOSS', 'CHV', 'NCI_CRCH', 'NCI_CareLex', 'UWDA', 'FMA',
@@ -41,7 +43,7 @@ class UMLSParser:
             'MRCONSO': path + os.sep + 'META' + os.sep + 'MRCONSO.RRF',
             'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF',
             'MRSTY': path + os.sep + 'META' + os.sep + 'MRSTY.RRF',
-            'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF.RRF'
+            'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF'
         }
         self.language_filter = language_filter
         self.concepts = {}
@@ -49,29 +51,49 @@ class UMLSParser:
         self.__parse_mrconso__()
         self.__parse_mrdef__()
         self.__parse_mrsty__()
+        self.__parse_srdef__()
+
+    def __get_or_add_concept__(self, cui: str) -> Concept:
+        concept = self.concepts.get(cui, Concept(cui))
+        self.concepts[cui] = concept
+        return concept
+
+    def __get_or_add_semantic_type__(self, tui: str) -> SemanticType:
+        semantic_type = self.semantic_types.get(tui, SemanticType(tui))
+        self.semantic_types[tui] = semantic_type
+        return semantic_type
 
     def __parse_mrconso__(self):
-        # https://www.ncbi.nlm.nih.gov/books/NBK9685/table/ch03.T.concept_names_and_sources_file_mr/
-        logging.info('Parsing UMLS concepts (MRCONSO.RRF) ...')
         for line in tqdm(open(self.paths['MRCONSO']), desc='Parsing UMLS concepts (MRCONSO.RRF)'):
             line = line.split('|')
             data = {
-                'cui': line[0],  # concept identifier
-                'lat': line[1],  # language of term
-                'str': line[14],
-                'ts': line[2]
-                # term status https://www.nlm.nih.gov/research/umls/knowledge_sources/metathesaurus/release/abbreviations.html
+                'CUI': line[0],
+                'LAT': line[1],  # language of term
+                'TS': line[2],  # term status
+                'LUI': line[3],
+                'STT': line[4],
+                'SUI': line[5],
+                'ISPREF': line[6],
+                'AUI': line[7],
+                'SAUI': line[8],
+                'SCUI': line[9],
+                'SDUI': line[10],
+                'SAB': line[11],
+                'TTY': line[12],
+                'CODE': line[13],
+                'STR': line[14],  # description string
+                'SRL': line[15],
+                'SUPPRESS': line[16],
+                'CVF': line[17]
             }
 
-            if len(self.language_filter) != 0 and data.get('lat') not in self.language_filter:
+            if len(self.language_filter) != 0 and data.get('LAT') not in self.language_filter:
                 continue
-            concept = self.concepts.get(data.get('cui'), Concept(data.get('cui')))
+            concept = self.__get_or_add_concept__(data.get('CUI'))
             concept.__add_mrconso_data__(data)
-            self.concepts[data.get('cui')] = concept
         logging.info('Found {} unique CUI´s'.format(len(self.concepts.keys())))
 
     def __parse_mrdef__(self):
-        logging.info('Parsing UMLS definitions (MRDEF.RRF) ...')
         source_filter = []
         for language in self.language_filter:
             for source in UMLS_sources_by_language.get(language):
@@ -79,98 +101,64 @@ class UMLSParser:
 
         for line in tqdm(open(self.paths['MRDEF']), desc='Parsing UMLS definitions (MRDEF.RRF)'):
             line = line.split('|')
-            data = {  # TODO USE OFFICIAL FIELD NAMES FROM MRFILES.RRF
-                'cui': line[0],
-                'source': line[4],
-                'definition': line[5]
+            data = {
+                'CUI': line[0],
+                'AUI': line[1],
+                'ATUI': line[2],
+                'SATUI': line[3],
+                'SAB': line[4],  # source
+                'DEF': line[5],  # definition
+                'SUPPRESS': line[6],
+                'CVF': line[7]
             }
-            if len(self.language_filter) != 0 and data.get('source') not in source_filter:
+            if len(self.language_filter) != 0 and data.get('SAB') not in source_filter:
                 continue
-            concept = self.concepts.get(data['cui'], Concept(data['cui']))
+            concept = self.__get_or_add_concept__(data.get('CUI'))
             concept.__add_mrdef_data__(data)
-            self.concepts[data.get('cui')] = concept
 
     def __parse_mrsty__(self):
         for line in tqdm(open(self.paths['MRSTY']), desc='Parsing UMLS semantic types (MRSTY.RRF)'):
             line = line.split('|')
-            data = {  # TODO USE OFFICIAL FIELD NAMES FROM MRFILES.RRF
-                'cui': line[0],
-                'tui': line[1],
-                'definition': line[3]
+            data = {
+                'CUI': line[0],
+                'TUI': line[1],
+                'STN': line[2],   # empty in MRSTY.RRF ?
+                'STY': line[3],   # empty in MRSTY.RRF ?
+                'ATUI': line[4],  # empty in MRSTY.RRF ?
+                'CVF': line[5]    # empty in MRSTY.RRF ?
             }
-            concept = self.concepts.get(data['cui'], Concept(data['cui']))
+            concept = self.__get_or_add_concept__(data.get('CUI'))
             concept.__add_mrsty_data__(data)
-            self.concepts[data.get('cui')] = concept
 
     def __parse_srdef__(self):
         for line in tqdm(open(self.paths['SRDEF']), desc='Parsing UMLS semantic net definitions (SRDEF.RRF)'):
             line = line.split('|')
             data = {
-                'RT': line[0],
-                'UI': line[1],
-                'STY_RL': line[2],
-                'STN_RTN': line[3],
-                'DEF': line[4],
-                'EX': line[5],
-                'UN': line[6],
-                'NH': line[7],
-                'ABR': line[8],
-                'RIN': line[9]
+                'RT': line[0],          # Semantic Type (STY) or Relation (RL)
+                'UI': line[1],          # Identifier
+                'STY_RL': line[2],      # Name of STY / RL
+                'STN_RTN': line[3],     # Tree Number of STY / RL
+                'DEF': line[4],         # Definition of STY / RL
+                'EX': line[5],          # Examples of Metathesaurus concepts
+                'UN': line[6],          # Usage note for STY assignment
+                'NH': line[7],          # STY and descendants allow the non-human flag
+                'ABR': line[8],         # Abbreviation of STY / RL
+                'RIN': line[9]          # Inverse of the RL
             }
+            semantic_type = self.__get_or_add_semantic_type__(data['UI'])
+            semantic_type.__add_srdef_data__(data)
 
-
-    def get_concepts(self):
+    def get_concepts(self) -> dict:
+        """
+        :return: A dictionary of all detected UMLS concepts
+        """
         return self.concepts
+
+    def get_semantic_types(self) -> dict:
+        """
+        :return: A dictionary of all detected UMLS semantic types
+        """
+        return self.semantic_types
 
     def get_languages(self):
         return self.language_filter
-
-
-class SemanticType:
-    def __init__(self, tui: str):
-        self.tui = tui
-
-    def __add_srdef_data__(self, data: dict):
-        # TODO WRITE ME
-        pass
-
-
-
-class Concept:
-    def __init__(self, cui: str):
-        self.cui = cui
-        self.tui = None
-        self.preferred_names = collections.defaultdict(set)
-        self.all_names = collections.defaultdict(set)
-        self.descriptions = set()
-
-    def __add_mrconso_data__(self, data: dict):
-        """
-        Adds data to a concept, mostly used during the parsing of an MRCONSO.RRF file.
-        :param data: certain fields out of an MRCONSO.RRF file (lat, str)
-        :return:
-        """
-        self.all_names[data['lat']].add(data['str'])
-        if data['ts'] == 'P':
-            self.preferred_names[data['lat']].add(data['str'])
-
-    def __add_mrdef_data__(self, data: dict):
-        self.descriptions.add((data.get('definition'), data.get('source')))
-
-    def __add_mrsty_data__(self, data: dict):
-        self.tui = data.get('ui')
-
-    def get_preferred_names_for_language(self, lang: str) -> set:
-        """
-        TODO WRITE ME
-       :param lang:
-       :return:
-       """
-        return self.preferred_names.get(lang)
-
-    def get_definitions(self) -> set:
-        """
-        TODO WRITE ME
-        :return:
-        """
-        return self.descriptions
