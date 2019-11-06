@@ -21,17 +21,21 @@ This tool requires the full UMLS release, so please download the [Full UMLS Rele
 
 ```bash
 mkdir umls-extract
+mkdir umls-extract/META
+mkdir umls-extract/NET
 unzip umls-2019AA-full.zip
 rm umls-2019AA-full.zip
 unzip 2019AA-full/2019aa-1-meta.nlm
-gunzip 2019AA/META/MRCONSO.RRF.aa.gz
-gunzip 2019AA/META/MRCONSO.RRF.ab.gz
-cat 2019AA/META/MRCONSO.RRF.aa 2019AA/META/MRCONSO.RRF.ab > umls-extract/MRCONSO.RRF
-gunzip 2019AA/META/MRDEF.RRF.gz
-mv 2019AA/META/MRDEF.RRF umls-extract/
-gunzip 2019AA/META/MRSTY.RRF.gz
-mv 2019AA/META/MRSTY.RRF umls-extract/
-TODO ADD SRDEF
+gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.aa.gz
+gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.ab.gz
+cat 2019AA-full/2019AA/META/MRCONSO.RRF.aa 2019AA-full/2019AA/META/MRCONSO.RRF.ab > umls-extract/META/MRCONSO.RRF
+gunzip 2019AA-full/2019AA/META/MRDEF.RRF.gz
+mv 2019AA-full/2019AA/META/MRDEF.RRF umls-extract/META/
+gunzip 2019AA-full/2019AA/META/MRSTY.RRF.gz
+mv 2019AA-full/2019AA/META/MRSTY.RRF umls-extract/META/
+mv 2019AA-full/2019AA/NET/SRDEF umls-extract/NET/
+
+rm -rf 2019AA-full/
 
 ```
 
