@@ -1,1 +1,2 @@
-from umlsparser import UMLSParser
+from .UMLSParser import UMLSParser
+from .model import Concept, SemanticType
