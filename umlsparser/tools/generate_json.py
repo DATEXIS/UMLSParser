@@ -1,6 +1,6 @@
 import json
 
-from UMLSParser import UMLSParser
+from umlsparser.UMLSParser import UMLSParser
 
 umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2019AA-full/2019AA', language_filter=['GER', 'ENG'])
 

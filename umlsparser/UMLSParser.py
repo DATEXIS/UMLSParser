@@ -3,8 +3,8 @@ import os
 
 from tqdm import tqdm
 
-from model.Concept import Concept
-from model.SemanticType import SemanticType
+from umlsparser.model.Concept import Concept
+from umlsparser.model.SemanticType import SemanticType
 
 UMLS_sources_by_language = {
     'ENG': ['MSH', 'CSP', 'NCI', 'PDQ', 'NCI_NCI-GLOSS', 'CHV', 'NCI_CRCH', 'NCI_CareLex', 'UWDA', 'FMA',
