@@ -1,5 +1,7 @@
 import logging
 import os
+import networkx as nx
+import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
@@ -43,15 +45,18 @@ class UMLSParser:
             'MRCONSO': path + os.sep + 'META' + os.sep + 'MRCONSO.RRF',
             'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF',
             'MRSTY': path + os.sep + 'META' + os.sep + 'MRSTY.RRF',
-            'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF'
+            'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF',
+            'SRSTRE1': path + os.sep + 'NET' + os.sep + 'SRSTRE1'
         }
         self.language_filter = language_filter
         self.concepts = {}
         self.semantic_types = {}
-        self.__parse_mrconso__()
-        self.__parse_mrdef__()
-        self.__parse_mrsty__()
+        self.semantic_network = nx.MultiDiGraph()
+        # self.__parse_mrconso__()
+        # self.__parse_mrdef__()
+        # self.__parse_mrsty__()
         self.__parse_srdef__()
+        self.__parse_srstre1__()
 
     def __get_or_add_concept__(self, cui: str) -> Concept:
         concept = self.concepts.get(cui, Concept(cui))
@@ -122,31 +127,42 @@ class UMLSParser:
             data = {
                 'CUI': line[0],
                 'TUI': line[1],
-                'STN': line[2],   # empty in MRSTY.RRF ?
-                'STY': line[3],   # empty in MRSTY.RRF ?
+                'STN': line[2],  # empty in MRSTY.RRF ?
+                'STY': line[3],  # empty in MRSTY.RRF ?
                 'ATUI': line[4],  # empty in MRSTY.RRF ?
-                'CVF': line[5]    # empty in MRSTY.RRF ?
+                'CVF': line[5]  # empty in MRSTY.RRF ?
             }
             concept = self.__get_or_add_concept__(data.get('CUI'))
             concept.__add_mrsty_data__(data)
 
     def __parse_srdef__(self):
-        for line in tqdm(open(self.paths['SRDEF']), desc='Parsing UMLS semantic net definitions (SRDEF.RRF)'):
+        for line in tqdm(open(self.paths['SRDEF']), desc='Parsing UMLS semantic net definitions (SRDEF)'):
             line = line.split('|')
             data = {
-                'RT': line[0],          # Semantic Type (STY) or Relation (RL)
-                'UI': line[1],          # Identifier
-                'STY_RL': line[2],      # Name of STY / RL
-                'STN_RTN': line[3],     # Tree Number of STY / RL
-                'DEF': line[4],         # Definition of STY / RL
-                'EX': line[5],          # Examples of Metathesaurus concepts
-                'UN': line[6],          # Usage note for STY assignment
-                'NH': line[7],          # STY and descendants allow the non-human flag
-                'ABR': line[8],         # Abbreviation of STY / RL
-                'RIN': line[9]          # Inverse of the RL
+                'RT': line[0],  # Semantic Type (STY) or Relation (RL)
+                'UI': line[1],  # Identifier
+                'STY_RL': line[2],  # Name of STY / RL
+                'STN_RTN': line[3],  # Tree Number of STY / RL
+                'DEF': line[4],  # Definition of STY / RL
+                'EX': line[5],  # Examples of Metathesaurus concepts
+                'UN': line[6],  # Usage note for STY assignment
+                'NH': line[7],  # STY and descendants allow the non-human flag
+                'ABR': line[8],  # Abbreviation of STY / RL
+                'RIN': line[9]  # Inverse of the RL
             }
             semantic_type = self.__get_or_add_semantic_type__(data['UI'])
             semantic_type.__add_srdef_data__(data)
+        logging.info('Found {} unique TUI´s'.format(len(self.semantic_types.keys())))
+
+    def __parse_srstre1__(self):
+        for line in tqdm(open(self.paths['SRSTRE1']), desc='Parsing UMLS semantic net relations (SRSTRE)'):
+            line = line.split('|')
+            left_tui = line[0]
+            relation_tui = line[1]
+            right_tui = line[2]
+            # TODO MAYBE WE ONLY NEED THE ISA RELATION RIGHT NOW?
+            if relation_tui == 'T186':  # IsA relation
+                self.semantic_network.add_edge(left_tui, right_tui, relation=relation_tui)
 
     def get_concepts(self) -> dict:
         """
@@ -159,6 +175,12 @@ class UMLSParser:
         :return: A dictionary of all detected UMLS semantic types
         """
         return self.semantic_types
+
+    def get_semantic_network(self) -> nx.MultiDiGraph:
+        """
+        :return: The semantic network as graph
+        """
+        return self.semantic_network
 
     def get_languages(self):
         return self.language_filter
