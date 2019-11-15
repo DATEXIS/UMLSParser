@@ -39,6 +39,10 @@ rm -rf 2019AA-full/
 
 ```
 
+## Usage
+
+*TODO WRITE ME*
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/T0biWan/bachelor-frontend-prototype/tags).

@@ -1,6 +1,16 @@
 class SemanticType:
     def __init__(self, tui: str):
-        self.__tui = tui
+        """TUI (field UI of SRDEF)"""
+        self.__tui: str = tui
+
+        """Type of SemanticType STY / RL (field RT of SRDEF)"""
+        self.__type: str = ''
+
+        """Definition (field DEF or SRDEF)"""
+        self.__definition: str = ''
+
+        """Name of SemanticType (field STY_RL of SRDEF)"""
+        self.__name: str = ''
 
     def __add_srdef_data__(self, data: dict):
         self.__type = data.get('RT')
