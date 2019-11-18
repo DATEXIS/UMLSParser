@@ -155,12 +155,15 @@ class UMLSParser:
         logging.info('Found {} unique TUI´s'.format(len(self.semantic_types.keys())))
 
     def __parse_srstre1__(self):
+        """
+        Parses the UMLS Semantic Network (only IsA relations so far)
+        TODO SRSTRE1 is a fully unrolled graph view, so the layers get lost...
+        """
         for line in tqdm(open(self.paths['SRSTRE1']), desc='Parsing UMLS semantic net relations (SRSTRE)'):
             line = line.split('|')
             left_tui = line[0]
             relation_tui = line[1]
             right_tui = line[2]
-            # TODO MAYBE WE ONLY NEED THE ISA RELATION RIGHT NOW?
             if relation_tui == 'T186':  # IsA relation
                 self.semantic_network.add_edge(left_tui, right_tui, relation=relation_tui)
 
