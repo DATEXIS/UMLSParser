@@ -41,7 +41,7 @@ rm -rf 2019AA-full/
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/T0biWan/bachelor-frontend-prototype/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/DATEXIS/UMLSParser/tags).
 
 ## Authors
 
