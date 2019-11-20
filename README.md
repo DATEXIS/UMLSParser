@@ -5,7 +5,7 @@ Parses the UMLS source files.
 ## Getting Started
 
 ### Acquiring UMLS Data
- 
+
 In order to use the UMLS you have to be licensed.
 For more information please refer to https://uts.nlm.nih.gov/home.html -> *Request a License*.
 
@@ -26,6 +26,7 @@ mkdir umls-extract/NET
 unzip umls-2019AA-full.zip
 rm umls-2019AA-full.zip
 unzip 2019AA-full/2019aa-1-meta.nlm
+unzip 2019AA-full/2019aa-otherks.nlm
 gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.aa.gz
 gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.ab.gz
 cat 2019AA-full/2019AA/META/MRCONSO.RRF.aa 2019AA-full/2019AA/META/MRCONSO.RRF.ab > umls-extract/META/MRCONSO.RRF
