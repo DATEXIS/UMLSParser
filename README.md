@@ -35,6 +35,7 @@ mv 2019AA-full/2019AA/META/MRDEF.RRF umls-extract/META/
 gunzip 2019AA-full/2019AA/META/MRSTY.RRF.gz
 mv 2019AA-full/2019AA/META/MRSTY.RRF umls-extract/META/
 mv 2019AA-full/2019AA/NET/SRDEF umls-extract/NET/
+mv 2019AA-full/2019AA/NET/SRSTRE1 umls-extract/NET/
 
 rm -rf 2019AA-full/
 
