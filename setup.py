@@ -17,7 +17,7 @@ setuptools.setup(
     url='https://github.com/DATEXIS/UMLSParser',
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
-    install_requires=['tqdm'],
+    install_requires=['tqdm', 'networkx'],
     classifiers=[
         # Trove classifiers
         # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
