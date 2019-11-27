@@ -33,6 +33,14 @@ class Concept:
        """
         return list(self.__preferred_names.get(lang, []))
 
+    def get_names_for_language(self, lang: str) -> list:
+        """
+        Returns a set of every concept name that was marked as preferred in MRCONSO.RRF.
+       :param lang: Language
+       :return: Set of names
+       """
+        return list(self.__all_names.get(lang, []))
+
     def get_definitions(self) -> set:
         """
         Returns all found definitions for this concept.
