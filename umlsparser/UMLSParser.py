@@ -1,7 +1,6 @@
 import logging
 import os
 import networkx as nx
-import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
