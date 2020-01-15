@@ -52,3 +52,10 @@ class Concept:
         """
         return self.__tui
 
+    def __str__(self):
+        preferred_english_name = ''
+        try:
+            preferred_english_name = self.get_preferred_names_for_language('ENG')[0]
+        except IndexError:
+            pass
+        return "{} ({})".format(preferred_english_name, self.get_cui())
