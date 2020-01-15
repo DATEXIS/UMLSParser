@@ -53,10 +53,10 @@ class UMLSParser:
         self.semantic_types = {}
         self.semantic_network = nx.MultiDiGraph()
         self.__parse_mrconso__()
-        self.__parse_mrdef__()
-        self.__parse_mrsty__()
-        self.__parse_srdef__()
-        self.__parse_srstre1__()
+        # self.__parse_mrdef__()
+        # self.__parse_mrsty__()
+        # self.__parse_srdef__()
+        # self.__parse_srstre1__()
         # self.__parse_mrrel__()
 
     def __get_or_add_concept__(self, cui: str) -> Concept:
