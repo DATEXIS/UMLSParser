@@ -26,6 +26,7 @@ mkdir umls-extract/NET
 unzip umls-2019AA-full.zip
 rm umls-2019AA-full.zip
 unzip 2019AA-full/2019aa-1-meta.nlm
+unzip 2019AA-full/2019aa-2-meta.nlm
 unzip 2019AA-full/2019aa-otherks.nlm
 gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.aa.gz
 gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.ab.gz
@@ -36,6 +37,8 @@ gunzip 2019AA-full/2019AA/META/MRSTY.RRF.gz
 mv 2019AA-full/2019AA/META/MRSTY.RRF umls-extract/META/
 mv 2019AA-full/2019AA/NET/SRDEF umls-extract/NET/
 mv 2019AA-full/2019AA/NET/SRSTRE1 umls-extract/NET/
+gunzip 2019AA-full/2019AA/META/MRREL.RRF.a*
+cat 2019AA-full/2019AA/META/MRREL.RRF.* > umls-extract/META/MRREL.RRF
 
 rm -rf 2019AA-full/
 

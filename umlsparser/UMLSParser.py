@@ -44,6 +44,7 @@ class UMLSParser:
             'MRCONSO': path + os.sep + 'META' + os.sep + 'MRCONSO.RRF',
             'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF',
             'MRSTY': path + os.sep + 'META' + os.sep + 'MRSTY.RRF',
+            'MRREL': path + os.sep + 'META' + os.sep + 'MRREL.RRF',
             'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF',
             'SRSTRE1': path + os.sep + 'NET' + os.sep + 'SRSTRE1'
         }
@@ -51,11 +52,12 @@ class UMLSParser:
         self.concepts = {}
         self.semantic_types = {}
         self.semantic_network = nx.MultiDiGraph()
-        # self.__parse_mrconso__()
-        # self.__parse_mrdef__()
-        # self.__parse_mrsty__()
+        self.__parse_mrconso__()
+        self.__parse_mrdef__()
+        self.__parse_mrsty__()
         self.__parse_srdef__()
         self.__parse_srstre1__()
+        # self.__parse_mrrel__()
 
     def __get_or_add_concept__(self, cui: str) -> Concept:
         concept = self.concepts.get(cui, Concept(cui))
@@ -165,6 +167,17 @@ class UMLSParser:
             right_tui = line[2]
             if relation_tui == 'T186':  # IsA relation
                 self.semantic_network.add_edge(left_tui, right_tui, relation=relation_tui)
+
+    def __parse_mrrel__(self):
+        for line in tqdm(open(self.paths['MRREL']), desc='Parsing UMLS concept relations (MRREL.RRF)'):
+            line = line.split('|')
+            cui1 = line[0]
+            cui2 = line[4]
+            rel = line[3]
+            rela = line[7]
+            if cui1 == 'C0004922' or cui2 == 'C0004922':  # TODO RMD
+                print(cui1, cui2, rel, rela)
+
 
     def get_concepts(self) -> dict:
         """
