@@ -1,6 +1,5 @@
 import logging
 import os
-import networkx as nx
 
 from tqdm import tqdm
 
@@ -26,26 +25,27 @@ UMLS_sources_by_language = {
     'HRV': ['MSHSCR']  # not sure
 }
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 class UMLSParser:
-    logging.basicConfig(level=logging.DEBUG)
 
     def __init__(self, path: str, language_filter: list = []):
         """
         :param path: Basepath to UMLS data files
         :param languages: List of languages with three-letter style language codes (if empty, no filtering will be applied)
         """
-        logging.info("Initialising UMLSParser for basepath {}".format(path))
+        logger.info("Initialising UMLSParser for basepath {}".format(path))
         if language_filter:
-            logging.info("Language filtering for {}".format(",".join(language_filter)))
+            logger.info("Language filtering for {}".format(",".join(language_filter)))
         else:
-            logging.info("No language filtering applied.")
+            logger.info("No language filtering applied.")
         self.paths = {
             'MRCONSO': path + os.sep + 'META' + os.sep + 'MRCONSO.RRF',
             'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF',
             'MRSTY': path + os.sep + 'META' + os.sep + 'MRSTY.RRF',
             'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF',
-            'SRSTRE1': path + os.sep + 'NET' + os.sep + 'SRSTRE1'
         }
         self.language_filter = language_filter
         self.concepts = {}
@@ -55,7 +55,6 @@ class UMLSParser:
         self.__parse_mrdef__()
         self.__parse_mrsty__()
         self.__parse_srdef__()
-        self.__parse_srstre1__()
 
     def __get_or_add_concept__(self, cui: str) -> Concept:
         concept = self.concepts.get(cui, Concept(cui))
@@ -95,7 +94,7 @@ class UMLSParser:
                 continue
             concept = self.__get_or_add_concept__(data.get('CUI'))
             concept.__add_mrconso_data__(data)
-        logging.info('Found {} unique CUI´s'.format(len(self.concepts.keys())))
+        logger.info('Found {} unique CUI´s'.format(len(self.concepts.keys())))
 
     def __parse_mrdef__(self):
         source_filter = []
@@ -151,20 +150,7 @@ class UMLSParser:
             }
             semantic_type = self.__get_or_add_semantic_type__(data['UI'])
             semantic_type.__add_srdef_data__(data)
-        logging.info('Found {} unique TUI´s'.format(len(self.semantic_types.keys())))
-
-    def __parse_srstre1__(self):
-        """
-        Parses the UMLS Semantic Network (only IsA relations so far)
-        TODO SRSTRE1 is a fully unrolled graph view, so the layers get lost...
-        """
-        for line in tqdm(open(self.paths['SRSTRE1']), desc='Parsing UMLS semantic net relations (SRSTRE)'):
-            line = line.split('|')
-            left_tui = line[0]
-            relation_tui = line[1]
-            right_tui = line[2]
-            if relation_tui == 'T186':  # IsA relation
-                self.semantic_network.add_edge(left_tui, right_tui, relation=relation_tui)
+        logger.info('Found {} unique TUI´s'.format(len(self.semantic_types.keys())))
 
     def get_concepts(self) -> dict:
         """
@@ -177,12 +163,6 @@ class UMLSParser:
         :return: A dictionary of all detected UMLS semantic types
         """
         return self.semantic_types
-
-    def get_semantic_network(self) -> nx.MultiDiGraph:
-        """
-        :return: The semantic network as graph
-        """
-        return self.semantic_network
 
     def get_languages(self):
         return self.language_filter

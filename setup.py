@@ -12,12 +12,12 @@ setuptools.setup(
     name='umlsparser',
     license='',
     description='Parser for UMLS data',
-    version='v0.0.1',
+    version='v0.1.0',
     long_description=README,
     url='https://github.com/DATEXIS/UMLSParser',
     packages=setuptools.find_packages(),
     python_requires=">=3.6",
-    install_requires=['tqdm', 'networkx'],
+    install_requires=['tqdm'],
     classifiers=[
         # Trove classifiers
         # (https://pypi.python.org/pypi?%3Aaction=list_classifiers)
