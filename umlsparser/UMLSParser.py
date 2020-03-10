@@ -50,7 +50,6 @@ class UMLSParser:
         self.language_filter = language_filter
         self.concepts = {}
         self.semantic_types = {}
-        self.semantic_network = nx.MultiDiGraph()
         self.__parse_mrconso__()
         self.__parse_mrdef__()
         self.__parse_mrsty__()
