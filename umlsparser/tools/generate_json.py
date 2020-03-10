@@ -2,9 +2,9 @@ import json
 
 from umlsparser.UMLSParser import UMLSParser
 
-umls = UMLSParser('/home/devfoo/Dev/Data/UMLS/2019AA-full/2019AA/', language_filter=['ENG','GER'])
+umls = UMLSParser('/home/devfoo/Dev/Data/UMLS/2019AA-full/2019AA/', language_filter=['ENG', 'GER'])
 
-with open('umls.jsonlines','w') as outfile:
+with open('umls.jsonlines', 'w') as outfile:
     for cui, concept in umls.get_concepts().items():
         output = {
             'cui': cui,
