@@ -44,6 +44,19 @@ rm -rf 2019AA-full/
 ## Usage
 
 *TODO WRITE ME*
+### Examples
+
+#### Getting all concepts that have a ICD10CM identifier
+
+```python
+umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2017AA-full/2017AA')
+
+for cui, concept in umls.get_concepts().items():
+    if 'ICD10CM' in concept.get_source_ids().keys():
+        icd10ids = concept.get_source_ids().get('ICD10CM')
+        print(icd10ids, concept.get_preferred_names_for_language('ENG')[0])
+```
+
 
 ## Versioning
 

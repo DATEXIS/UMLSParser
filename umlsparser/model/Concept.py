@@ -8,6 +8,7 @@ class Concept:
         self.__preferred_names = collections.defaultdict(set)
         self.__all_names = collections.defaultdict(set)
         self.__definitions = set()
+        self.__source_ids = collections.defaultdict(set)
 
     def __add_mrconso_data__(self, data: dict):
         """
@@ -18,6 +19,8 @@ class Concept:
         self.__all_names[data['LAT']].add(data['STR'])
         if data['TS'] == 'P':
             self.__preferred_names[data['LAT']].add(data['STR'])
+        if data['SAB'] != '' and data['CODE'] != '':
+            self.__source_ids[data['SAB']].add(data['CODE'])
 
     def __add_mrdef_data__(self, data: dict):
         self.__definitions.add((data.get('DEF'), data.get('SAB')))
@@ -60,3 +63,9 @@ class Concept:
         """
         return self.__tui
 
+    def get_source_ids(self) -> dict:
+        """
+        This returns a list of all found codes. Be aware that the codes are determined after the language filter!
+        :return: Dict of all unique ids for all sources
+        """
+        return self.__source_ids
