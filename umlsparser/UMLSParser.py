@@ -80,15 +80,14 @@ class UMLSParser:
                 'SAUI': line[8],
                 'SCUI': line[9],
                 'SDUI': line[10],
-                'SAB': line[11],
+                'SAB': line[11],  # source abbreviation
                 'TTY': line[12],
-                'CODE': line[13],
+                'CODE': line[13],  # Unique Identifier or code for string in source
                 'STR': line[14],  # description string
                 'SRL': line[15],
                 'SUPPRESS': line[16],
                 'CVF': line[17]
             }
-
             if len(self.language_filter) != 0 and data.get('LAT') not in self.language_filter:
                 continue
             concept = self.__get_or_add_concept__(data.get('CUI'))
