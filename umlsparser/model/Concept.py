@@ -1,4 +1,5 @@
 import collections
+from typing import Set, Tuple, Dict
 
 
 class Concept:
@@ -44,7 +45,7 @@ class Concept:
        """
         return list(self.__all_names.get(lang, []))
 
-    def get_definitions(self) -> set:
+    def get_definitions(self) -> Set[Tuple[str, str]]:
         """
         Returns all found definitions for this concept.
         :return: Set of tuples (definition, source)
@@ -63,7 +64,7 @@ class Concept:
         """
         return self.__tui
 
-    def get_source_ids(self) -> dict:
+    def get_source_ids(self) -> Dict[str, Set[str]]:
         """
         This returns a list of all found codes. Be aware that the codes are determined after the language filter!
         :return: Dict of all unique ids for all sources

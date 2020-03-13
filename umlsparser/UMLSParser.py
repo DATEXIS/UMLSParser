@@ -1,5 +1,6 @@
 import logging
 import os
+from typing import Dict
 
 from tqdm import tqdm
 
@@ -150,15 +151,15 @@ class UMLSParser:
             semantic_type.__add_srdef_data__(data)
         logger.info('Found {} unique TUI´s'.format(len(self.semantic_types.keys())))
 
-    def get_concepts(self) -> dict:
+    def get_concepts(self) -> Dict[str, Concept]:
         """
-        :return: A dictionary of all detected UMLS concepts
+        :return: A dictionary of all detected UMLS concepts with CUI being the key.
         """
         return self.concepts
 
-    def get_semantic_types(self) -> dict:
+    def get_semantic_types(self) -> Dict[str, SemanticType]:
         """
-        :return: A dictionary of all detected UMLS semantic types
+        :return: A dictionary of all detected UMLS semantic types with TUI being the key.
         """
         return self.semantic_types
 

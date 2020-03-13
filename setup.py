@@ -12,7 +12,7 @@ setuptools.setup(
     name='umlsparser',
     license='',
     description='Parser for UMLS data',
-    version='v0.2.0',
+    version='v0.2.1',
     long_description=README,
     url='https://github.com/DATEXIS/UMLSParser',
     packages=setuptools.find_packages(),
