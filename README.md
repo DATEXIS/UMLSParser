@@ -49,6 +49,8 @@ rm -rf 2019AA-full/
 #### Getting all concepts that have a ICD10CM identifier
 
 ```python
+from umlsparser import UMLSParser
+
 umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2017AA-full/2017AA')
 
 for cui, concept in umls.get_concepts().items():
@@ -57,6 +59,23 @@ for cui, concept in umls.get_concepts().items():
         print(icd10ids, concept.get_preferred_names_for_language('ENG')[0])
 ```
 
+#### Generate a table for the distribution of all english UMLS sources
+
+```python
+from umlsparser import UMLSParser
+import collections
+
+umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2017AA-full/2017AA')
+sources_counter = collections.defaultdict(int)
+for cui, concept in umls.get_concepts().items():
+    sources = concept.get_source_ids().keys()
+    for source in sources:
+        sources_counter[source] += 1
+print('|SOURCE|COUNT|\n|------|-----|')
+for source, count in sorted(sources_counter.items(), key=lambda t: t[1], reverse=True):
+    print('|{}|{}|'.format(source, count))
+
+```
 
 ## Versioning
 
