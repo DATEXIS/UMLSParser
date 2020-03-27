@@ -43,10 +43,10 @@ class UMLSParser:
         else:
             logger.info("No language filtering applied.")
         self.paths = {
-            'MRCONSO': path + os.sep + 'META' + os.sep + 'MRCONSO.RRF',
-            'MRDEF': path + os.sep + 'META' + os.sep + 'MRDEF.RRF',
-            'MRSTY': path + os.sep + 'META' + os.sep + 'MRSTY.RRF',
-            'SRDEF': path + os.sep + 'NET' + os.sep + 'SRDEF',
+            'MRCONSO': os.path.join(path, 'META', 'MRCONSO.RRF'),
+            'MRDEF': os.path.join(path, 'META', 'MRDEF.RRF'),
+            'MRSTY': os.path.join(path, 'META', 'MRSTY.RRF'),
+            'SRDEF': os.path.join(path, 'NET', 'SRDEF'),
         }
         self.language_filter = language_filter
         self.concepts = {}
