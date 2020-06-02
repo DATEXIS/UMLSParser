@@ -93,7 +93,7 @@ class UMLSParser:
                 continue
             concept = self.__get_or_add_concept__(data.get('CUI'))
             concept.__add_mrconso_data__(data)
-        logger.info('Found {} unique CUI´s'.format(len(self.concepts.keys())))
+        logger.info('Found {} unique CUIs'.format(len(self.concepts.keys())))
 
     def __parse_mrdef__(self):
         source_filter = []
@@ -149,7 +149,7 @@ class UMLSParser:
             }
             semantic_type = self.__get_or_add_semantic_type__(data['UI'])
             semantic_type.__add_srdef_data__(data)
-        logger.info('Found {} unique TUI´s'.format(len(self.semantic_types.keys())))
+        logger.info('Found {} unique TUIs'.format(len(self.semantic_types.keys())))
 
     def get_concepts(self) -> Dict[str, Concept]:
         """
