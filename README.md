@@ -77,6 +77,22 @@ for source, count in sorted(sources_counter.items(), key=lambda t: t[1], reverse
 
 ```
 
+#### Generate a list of all english concept names and their semantic category
+
+```python
+from umlsparser import UMLSParser
+
+umls = UMLSParser('/home/toberhauser/DEV/Data/UMLS/2017AA-full/2017AA')
+
+umls.get_concepts()
+
+for cui, concept in umls.get_concepts().items():
+    tui = concept.get_tui()
+    name_of_semantic_type = umls.get_semantic_types()[concept.get_tui()].get_name()
+    for name in concept.get_names_for_language('ENG'):
+        print(cui, name, tui, name_of_semantic_type)
+```
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/T0biWan/bachelor-frontend-prototype/tags).
