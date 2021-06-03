@@ -1,18 +1,25 @@
+from dataclasses import dataclass
+from typing import Dict
+
+
+@dataclass(init=False, repr=True, eq=True)
 class SemanticType:
+    """TUI (field UI of SRDEF)"""
+    __tui: str
+    """Type of SemanticType STY / RL (field RT of SRDEF)"""
+    __type: str
+    """Definition (field DEF or SRDEF)"""
+    __definition: str
+    """Name of SemanticType (field STY_RL of SRDEF)"""
+    __name: str
+
     def __init__(self, tui: str):
-        """TUI (field UI of SRDEF)"""
         self.__tui: str = tui
-
-        """Type of SemanticType STY / RL (field RT of SRDEF)"""
         self.__type: str = ''
-
-        """Definition (field DEF or SRDEF)"""
         self.__definition: str = ''
-
-        """Name of SemanticType (field STY_RL of SRDEF)"""
         self.__name: str = ''
 
-    def __add_srdef_data__(self, data: dict):
+    def __add_srdef_data__(self, data: Dict):
         self.__type = data.get('RT')
         self.__name = data.get('STY_RL')
         self.__definition = data.get('DEF')

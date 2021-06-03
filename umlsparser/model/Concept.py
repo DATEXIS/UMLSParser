@@ -1,8 +1,17 @@
 import collections
+from dataclasses import dataclass
 from typing import Set, Tuple, Dict
 
 
+@dataclass(init=False, repr=True, eq=True)
 class Concept:
+    __cui: str
+    __tui: str
+    __preferred_names: Dict[str, Set[str]]
+    __all_names: Dict[str, Set[str]]
+    __definitions: Set[Tuple[str, str]]
+    __source_ids: Dict[str, Set[str]]
+
     def __init__(self, cui: str):
         self.__cui = cui
         self.__tui = None
