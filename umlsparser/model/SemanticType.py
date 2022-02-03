@@ -35,3 +35,6 @@ class SemanticType:
         :return: Textual defintion of Semantic Type
         """
         return self.__definition
+
+    def __hash__(self):
+        return hash(self.__tui)

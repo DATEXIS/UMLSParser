@@ -79,3 +79,6 @@ class Concept:
         :return: Dict of all unique ids for all sources
         """
         return self.__source_ids
+
+    def __hash__(self):
+        return hash(self.__cui)
