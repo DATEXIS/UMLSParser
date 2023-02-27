@@ -23,22 +23,21 @@ This tool requires the full UMLS release, so please download the [Full UMLS Rele
 mkdir umls-extract
 mkdir umls-extract/META
 mkdir umls-extract/NET
-unzip umls-2019AA-full.zip
-rm umls-2019AA-full.zip
-unzip 2019AA-full/2019aa-1-meta.nlm
-unzip 2019AA-full/2019aa-otherks.nlm
-gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.aa.gz
-gunzip 2019AA-full/2019AA/META/MRCONSO.RRF.ab.gz
-cat 2019AA-full/2019AA/META/MRCONSO.RRF.aa 2019AA-full/2019AA/META/MRCONSO.RRF.ab > umls-extract/META/MRCONSO.RRF
-gunzip 2019AA-full/2019AA/META/MRDEF.RRF.gz
-mv 2019AA-full/2019AA/META/MRDEF.RRF umls-extract/META/
-gunzip 2019AA-full/2019AA/META/MRSTY.RRF.gz
-mv 2019AA-full/2019AA/META/MRSTY.RRF umls-extract/META/
-mv 2019AA-full/2019AA/NET/SRDEF umls-extract/NET/
-mv 2019AA-full/2019AA/NET/SRSTRE1 umls-extract/NET/
+unzip umls-2022AB-full.zip
+rm umls-2022AB-full.zip
+unzip 2022AB-full/2022ab-1-meta.nlm
+unzip 2022AB-full/2022ab-otherks.nlm
+gunzip 2022AB/META/MRCONSO.RRF.aa.gz
+gunzip 2022AB/META/MRCONSO.RRF.ab.gz
+cat 2022AB/META/MRCONSO.RRF.aa 2022AB/META/MRCONSO.RRF.ab > umls-extract/META/MRCONSO.RRF
+gunzip 2022AB/META/MRDEF.RRF.gz
+mv 2022AB/META/MRDEF.RRF umls-extract/META/
+gunzip 2022AB/META/MRSTY.RRF.gz
+mv 2022AB/META/MRSTY.RRF umls-extract/META/
+mv 2022AB/NET/SRDEF umls-extract/NET/
+mv 2022AB/NET/SRSTRE1 umls-extract/NET/
 
 rm -rf 2019AA-full/
-
 ```
 
 ## Usage
